@@ -1,0 +1,201 @@
+@import "tailwindcss" theme(static);
+
+@theme {
+  /* Primary Colors */
+  --color-primary-50: #eef9ff;
+  --color-primary-100: #d8f1ff;
+  --color-primary-200: #b9e7ff;
+  --color-primary-300: #89d7ff;
+  --color-primary-400: #52beff;
+  --color-primary-500: #2a9df4;
+  --color-primary-600: #1480e0;
+  --color-primary-700: #0d66c0;
+  --color-primary-800: #0f549a;
+  --color-primary-900: #12467f;
+  --color-primary-950: #0d2d52;
+
+  /* Accent Colors */
+  --color-accent-400: #fb923c;
+  --color-accent-500: #f97316;
+  --color-accent-600: #ea6c0a;
+
+  /* Dark Colors (for fixed reference) */
+  --color-dark-800: #1a1f2e;
+  --color-dark-900: #0f1420;
+  --color-dark-950: #070c17;
+
+  /* Fonts */
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Poppins", system-ui, sans-serif;
+
+  /* Animations */
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-fade-in: fadeIn 0.5s ease-out;
+  --animate-slide-up: slideUp 0.5s ease-out;
+
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(20px);
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap');
+
+@layer base {
+  :root {
+    --bg-main: #f8fafc;
+    --text-main: #020617;
+    --text-muted: #475569;
+    --card-bg: #ffffff;
+    --card-border: rgba(0, 0, 0, 0.04);
+    --input-bg: #f8fafc;
+    --scroll-track: #f1f5f9;
+    --badge-blue-bg: rgba(42, 157, 244, 0.1);
+    --badge-blue-text: #0d66c0;
+    --badge-orange-bg: rgba(249, 115, 22, 0.1);
+    --badge-orange-text: #ea6c0a;
+    --badge-green-bg: rgba(16, 185, 129, 0.1);
+    --badge-green-text: #059669;
+    --badge-red-bg: rgba(244, 63, 94, 0.1);
+    --badge-red-text: #e11d48;
+  }
+
+  .dark {
+    --bg-main: var(--color-dark-950);
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+    --card-bg: var(--color-dark-800);
+    --card-border: rgba(255, 255, 255, 0.05);
+    --input-bg: var(--color-dark-800);
+    --scroll-track: var(--color-dark-900);
+    --badge-blue-bg: rgba(42, 157, 244, 0.2);
+    --badge-blue-text: #89d7ff;
+    --badge-orange-bg: rgba(249, 115, 22, 0.2);
+    --badge-orange-text: #fb923c;
+    --badge-green-bg: rgba(16, 185, 129, 0.2);
+    --badge-green-text: #34d399;
+    --badge-red-bg: rgba(244, 63, 94, 0.2);
+    --badge-red-text: #fb7185;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  ::selection {
+    background-color: var(--color-primary-500);
+    color: white;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: var(--scroll-track);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-primary-700);
+    border-radius: 9999px;
+  }
+}
+
+@utility btn-primary {
+  @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40 hover:scale-105 active:scale-95;
+}
+
+@utility btn-outline {
+  @apply inline-flex items-center justify-center gap-2 px-6 py-3 border border-primary-500 text-primary-500 dark:text-primary-400 hover:bg-primary-500 hover:text-white font-semibold rounded-xl transition-all duration-200;
+}
+
+@utility btn-ghost {
+  @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 font-medium rounded-lg transition-all duration-200;
+}
+
+@utility card {
+  @apply bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl overflow-hidden shadow-xl transition-colors duration-300;
+}
+
+@utility card-hover {
+  @apply card hover:border-primary-500/50 hover:shadow-2xl hover:shadow-primary-500/10 hover:-translate-y-1 transition-all duration-300;
+}
+
+@utility glass {
+  @apply bg-white/40 dark:bg-white/5 backdrop-blur-lg border border-white/20 dark:border-white/10;
+}
+
+@utility section-title {
+  @apply text-3xl md:text-4xl font-display font-bold text-[var(--text-main)];
+}
+
+@utility section-subtitle {
+  @apply text-[var(--text-muted)] text-lg mt-3 max-w-2xl;
+}
+
+@utility input-field {
+  @apply w-full px-4 py-3 bg-[var(--input-bg)] border border-[var(--card-border)] rounded-xl text-[var(--text-main)] placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all duration-200;
+}
+
+@utility badge {
+  @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold;
+}
+
+@utility badge-blue {
+  @apply badge bg-[var(--badge-blue-bg)] text-[var(--badge-blue-text)];
+}
+
+@utility badge-orange {
+  @apply badge bg-[var(--badge-orange-bg)] text-[var(--badge-orange-text)];
+}
+
+@utility badge-green {
+  @apply badge bg-[var(--badge-green-bg)] text-[var(--badge-green-text)];
+}
+
+@utility badge-red {
+  @apply badge bg-[var(--badge-red-bg)] text-[var(--badge-red-text)];
+}
+
+@utility text-gradient {
+  background-image: linear-gradient(to right, var(--color-primary-400), var(--color-accent-400));
+  background-clip: text;
+  color: transparent;
+}
+
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
