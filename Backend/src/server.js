@@ -6,9 +6,7 @@ const { testConnection } = require('./config/db');
 const { initDatabase } = require('./utils/dbInit');
 
 const PORT = process.env.PORT || 5000;
-console.log("MYSQLHOST:", process.env.MYSQLHOST);
-console.log("MYSQLPORT:", process.env.MYSQLPORT);
-console.log("MYSQLUSER:", process.env.MYSQLUSER);
+
 async function startServer() {
     try {
         // 1. Test DB connection
@@ -30,9 +28,16 @@ async function startServer() {
             console.log('');
         });
     } catch (err) {
-        console.error('  ✖ Failed to start server:', err.message);
-        console.log("DB_HOST:", process.env.DB_HOST);
-console.log("DB_PORT:", process.env.DB_PORT);
+        console.error('  ✖ Failed to start server:');
+        console.error('    Code   :', err.code || 'N/A');
+        console.error('    Message:', err.message || 'No message – check DB is running');
+        console.error('    Detail :', err.sqlMessage || err.cause?.message || err.toString());
+        console.error('');
+        console.error('  DB Config being used:');
+        console.error('    HOST    :', process.env.MYSQLHOST || process.env.DB_HOST || 'localhost');
+        console.error('    PORT    :', process.env.MYSQLPORT || process.env.DB_PORT || '3306');
+        console.error('    USER    :', process.env.MYSQLUSER || process.env.DB_USER || 'root');
+        console.error('    DATABASE:', process.env.MYSQLDATABASE || process.env.DB_NAME || 'traveland_db');
         process.exit(1);
     }
 }
