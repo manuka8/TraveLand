@@ -1,14 +1,28 @@
 import axios from 'axios';
+import {
+    dummyDestinations,
+    dummyPackages,
+    dummyHotels,
+    dummyReviews,
+} from '../data/dummyData';
 
+// ── Config ────────────────────────────────────────────────────────────────────
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
+/**
+ * Set VITE_USE_DUMMY_DATA=true in .env to always use dummy data.
+ * Otherwise, dummy data is used automatically when the backend is unreachable.
+ */
+const FORCE_DUMMY = import.meta.env.VITE_USE_DUMMY_DATA === 'true';
+
+// ── Axios instance ─────────────────────────────────────────────────────────────
 const api = axios.create({
     baseURL: API_BASE_URL,
-    timeout: 15000,
+    timeout: 6000,
     headers: { 'Content-Type': 'application/json' },
 });
 
-// ── Request interceptor: attach JWT ──────────────────────────────────────────
+// ── Request interceptor: attach JWT ────────────────────────────────────────────
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('tl_token');
@@ -18,7 +32,7 @@ api.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// ── Response interceptor: handle 401 ────────────────────────────────────────
+// ── Response interceptor: handle 401 ──────────────────────────────────────────
 api.interceptors.response.use(
     (response) => response.data,
     (error) => {
@@ -31,7 +45,23 @@ api.interceptors.response.use(
     }
 );
 
-// ── Auth ──────────────────────────────────────────────────────────────────────
+// ── Smart fetch helper ─────────────────────────────────────────────────────────
+/**
+ * Try the backend API first; if it fails (offline/error) fall back to dummy data.
+ * @param {Function} apiFn  - () => axios promise
+ * @param {*}        dummy  - dummy value to return on failure
+ */
+async function withFallback(apiFn, dummy) {
+    if (FORCE_DUMMY) return dummy;
+    try {
+        return await apiFn();
+    } catch {
+        console.warn('[TraveLand] Backend unavailable — using dummy data.');
+        return dummy;
+    }
+}
+
+// ── Auth ───────────────────────────────────────────────────────────────────────
 export const authAPI = {
     register: (data) => api.post('/auth/register', data),
     login: (data) => api.post('/auth/login', data),
@@ -39,12 +69,12 @@ export const authAPI = {
         const formData = new FormData();
         formData.append('image', imageFile);
         return api.post('/auth/upload', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' }
+            headers: { 'Content-Type': 'multipart/form-data' },
         });
     },
 };
 
-// ── User ──────────────────────────────────────────────────────────────────────
+// ── User ───────────────────────────────────────────────────────────────────────
 export const userAPI = {
     getProfile: () => api.get('/users/me'),
     updateProfile: (data) => api.patch('/users/me', data),
@@ -53,26 +83,52 @@ export const userAPI = {
     removeFromWishlist: (id) => api.delete(`/users/me/wishlist/${id}`),
 };
 
-// ── Destinations ──────────────────────────────────────────────────────────────
+// ── Destinations (with fallback) ───────────────────────────────────────────────
 export const destinationAPI = {
-    getAll: (params) => api.get('/destinations', { params }),
-    getFeatured: (limit = 6) => api.get('/destinations/featured', { params: { limit } }),
-    getById: (id) => api.get(`/destinations/${id}`),
+    getAll: (params) =>
+        withFallback(
+            () => api.get('/destinations', { params }).then(r => r.data || r),
+            dummyDestinations
+        ).then(data => Array.isArray(data) ? data : (data?.data ?? dummyDestinations)),
+
+    getFeatured: (limit = 6) =>
+        withFallback(
+            () => api.get('/destinations/featured', { params: { limit } })
+                .then(r => (r.data || r).slice(0, limit)),
+            dummyDestinations.filter(d => d.is_featured).slice(0, limit)
+        ).then(data => ({ data: Array.isArray(data) ? data : (data?.data ?? dummyDestinations) })),
+
+    getById: (id) =>
+        withFallback(
+            () => api.get(`/destinations/${id}`).then(r => r.data || r),
+            dummyDestinations.find(d => d.id === Number(id)) || dummyDestinations[0]
+        ).then(data => ({ data: data?.data || data })),
+
     create: (data) => api.post('/destinations', data),
     update: (id, data) => api.put(`/destinations/${id}`, data),
     remove: (id) => api.delete(`/destinations/${id}`),
 };
 
-// ── Packages ──────────────────────────────────────────────────────────────────
+// ── Packages (with fallback) ────────────────────────────────────────────────────
 export const packageAPI = {
-    getAll: (params) => api.get('/packages', { params }),
-    getById: (id) => api.get(`/packages/${id}`),
+    getAll: (params) =>
+        withFallback(
+            () => api.get('/packages', { params }).then(r => r.data || r),
+            dummyPackages
+        ).then(data => ({ data: Array.isArray(data) ? data : (data?.data ?? dummyPackages) })),
+
+    getById: (id) =>
+        withFallback(
+            () => api.get(`/packages/${id}`).then(r => r.data || r),
+            dummyPackages.find(p => p.id === Number(id)) || dummyPackages[0]
+        ).then(data => ({ data: data?.data || data })),
+
     create: (data) => api.post('/packages', data),
     update: (id, data) => api.put(`/packages/${id}`, data),
     remove: (id) => api.delete(`/packages/${id}`),
 };
 
-// ── Bookings ──────────────────────────────────────────────────────────────────
+// ── Bookings ────────────────────────────────────────────────────────────────────
 export const bookingAPI = {
     create: (data) => api.post('/bookings', data),
     getMyBookings: (params) => api.get('/bookings/my', { params }),
@@ -80,29 +136,43 @@ export const bookingAPI = {
     cancel: (id) => api.patch(`/bookings/${id}/cancel`),
 };
 
-// ── Payments ──────────────────────────────────────────────────────────────────
+// ── Payments ────────────────────────────────────────────────────────────────────
 export const paymentAPI = {
     initiate: (data) => api.post('/payments', data),
     getMyPayments: (params) => api.get('/payments/my', { params }),
     getByBooking: (booking_id) => api.get(`/payments/booking/${booking_id}`),
 };
 
-// ── Reviews ───────────────────────────────────────────────────────────────────
+// ── Reviews (with fallback) ─────────────────────────────────────────────────────
 export const reviewAPI = {
     create: (data) => api.post('/reviews', data),
-    getByDestination: (dest_id, params) => api.get(`/reviews/destination/${dest_id}`, { params }),
+    getByDestination: (dest_id, params) =>
+        withFallback(
+            () => api.get(`/reviews/destination/${dest_id}`, { params }),
+            { data: dummyReviews }
+        ),
 };
 
-// ── Hotels (New) ──────────────────────────────────────────────────────────────
+// ── Hotels (with fallback) ──────────────────────────────────────────────────────
 export const hotelAPI = {
-    getAll: (params) => api.get('/hotels', { params }),
-    getById: (id) => api.get(`/hotels/${id}`),
+    getAll: (params) =>
+        withFallback(
+            () => api.get('/hotels', { params }).then(r => r.data || r),
+            dummyHotels
+        ).then(data => ({ data: Array.isArray(data) ? data : (data?.data ?? dummyHotels) })),
+
+    getById: (id) =>
+        withFallback(
+            () => api.get(`/hotels/${id}`).then(r => r.data || r),
+            dummyHotels.find(h => h.id === Number(id)) || dummyHotels[0]
+        ).then(data => ({ data: data?.data || data })),
+
     create: (data) => api.post('/hotels', data),
     update: (id, data) => api.put(`/hotels/${id}`, data),
     remove: (id) => api.delete(`/hotels/${id}`),
 };
 
-// ── Admin ─────────────────────────────────────────────────────────────────────
+// ── Admin ───────────────────────────────────────────────────────────────────────
 export const adminAPI = {
     getStats: () => api.get('/admin/stats'),
     getUsers: (params) => api.get('/admin/users', { params }),
