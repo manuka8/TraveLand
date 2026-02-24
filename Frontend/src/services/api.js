@@ -85,24 +85,29 @@ export const userAPI = {
 
 // ── Destinations (with fallback) ───────────────────────────────────────────────
 export const destinationAPI = {
+    // Destinations page expects: { data: [...], pagination: { total } }
     getAll: (params) =>
         withFallback(
-            () => api.get('/destinations', { params }).then(r => r.data || r),
-            dummyDestinations
-        ).then(data => Array.isArray(data) ? data : (data?.data ?? dummyDestinations)),
+            () => api.get('/destinations', { params }),
+            {
+                data: dummyDestinations,
+                pagination: { total: dummyDestinations.length, page: 1, limit: 9 },
+            }
+        ),
 
+    // Home page expects: { data: [...] }
     getFeatured: (limit = 6) =>
         withFallback(
-            () => api.get('/destinations/featured', { params: { limit } })
-                .then(r => (r.data || r).slice(0, limit)),
-            dummyDestinations.filter(d => d.is_featured).slice(0, limit)
-        ).then(data => ({ data: Array.isArray(data) ? data : (data?.data ?? dummyDestinations) })),
+            () => api.get('/destinations/featured', { params: { limit } }),
+            { data: dummyDestinations.filter(d => d.is_featured).slice(0, limit) }
+        ),
 
+    // Detail page expects: { data: { ...destination } }
     getById: (id) =>
         withFallback(
-            () => api.get(`/destinations/${id}`).then(r => r.data || r),
-            dummyDestinations.find(d => d.id === Number(id)) || dummyDestinations[0]
-        ).then(data => ({ data: data?.data || data })),
+            () => api.get(`/destinations/${id}`),
+            { data: dummyDestinations.find(d => d.id === Number(id)) || dummyDestinations[0] }
+        ),
 
     create: (data) => api.post('/destinations', data),
     update: (id, data) => api.put(`/destinations/${id}`, data),
@@ -111,17 +116,19 @@ export const destinationAPI = {
 
 // ── Packages (with fallback) ────────────────────────────────────────────────────
 export const packageAPI = {
+    // Packages/Home page expects: { data: [...] }
     getAll: (params) =>
         withFallback(
-            () => api.get('/packages', { params }).then(r => r.data || r),
-            dummyPackages
-        ).then(data => ({ data: Array.isArray(data) ? data : (data?.data ?? dummyPackages) })),
+            () => api.get('/packages', { params }),
+            { data: dummyPackages, pagination: { total: dummyPackages.length } }
+        ),
 
+    // Detail page expects: { data: { ...package } }
     getById: (id) =>
         withFallback(
-            () => api.get(`/packages/${id}`).then(r => r.data || r),
-            dummyPackages.find(p => p.id === Number(id)) || dummyPackages[0]
-        ).then(data => ({ data: data?.data || data })),
+            () => api.get(`/packages/${id}`),
+            { data: dummyPackages.find(p => p.id === Number(id)) || dummyPackages[0] }
+        ),
 
     create: (data) => api.post('/packages', data),
     update: (id, data) => api.put(`/packages/${id}`, data),
@@ -155,17 +162,19 @@ export const reviewAPI = {
 
 // ── Hotels (with fallback) ──────────────────────────────────────────────────────
 export const hotelAPI = {
+    // Hotels page expects: { data: [...] }
     getAll: (params) =>
         withFallback(
-            () => api.get('/hotels', { params }).then(r => r.data || r),
-            dummyHotels
-        ).then(data => ({ data: Array.isArray(data) ? data : (data?.data ?? dummyHotels) })),
+            () => api.get('/hotels', { params }),
+            { data: dummyHotels, pagination: { total: dummyHotels.length } }
+        ),
 
+    // Detail page expects: { data: { ...hotel } }
     getById: (id) =>
         withFallback(
-            () => api.get(`/hotels/${id}`).then(r => r.data || r),
-            dummyHotels.find(h => h.id === Number(id)) || dummyHotels[0]
-        ).then(data => ({ data: data?.data || data })),
+            () => api.get(`/hotels/${id}`),
+            { data: dummyHotels.find(h => h.id === Number(id)) || dummyHotels[0] }
+        ),
 
     create: (data) => api.post('/hotels', data),
     update: (id, data) => api.put(`/hotels/${id}`, data),
