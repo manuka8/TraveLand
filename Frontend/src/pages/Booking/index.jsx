@@ -10,7 +10,7 @@ export default function BookingPage() {
     const { packageId } = useParams();
     const navigate = useNavigate();
     const [pkg, setPkg] = useState(null);
-    const [form, setForm] = useState({ guests: 1, travel_date: '', return_date: '', notes: '' });
+    const [form, setForm] = useState({ guests: 1, travel_date: '', travel_date_obj: null, return_date: '', notes: '' });
     const [loading, setLoading] = useState(false);
     const [submitting, setSubmitting] = useState(false);
 
@@ -26,16 +26,23 @@ export default function BookingPage() {
     const handleSubmit = async e => {
         e.preventDefault();
         if (!form.travel_date) { toast.error('Please select a travel date.'); return; }
+
+        const selectedSlot = pkg.availability.find(a => a.available_date === form.travel_date);
+        if (!selectedSlot || selectedSlot.available_slots < Number(form.guests)) {
+            toast.error('Not enough slots available for this date.');
+            return;
+        }
+
         setSubmitting(true);
         try {
-            const res = await bookingAPI.create({
+            await bookingAPI.create({
                 package_id: Number(packageId),
                 guests: Number(form.guests),
                 travel_date: form.travel_date,
                 return_date: form.return_date || undefined,
                 notes: form.notes || undefined,
             });
-            toast.success('Booking created successfully!');
+            toast.success('Your adventure is booked!');
             navigate('/dashboard');
         } catch (err) {
             toast.error(err.message || 'Booking failed. Please try again.');
@@ -62,17 +69,47 @@ export default function BookingPage() {
                 <motion.form variants={staggerContainer} animate="animate" initial="initial"
                     onSubmit={handleSubmit} className="lg:col-span-3 space-y-5">
                     <motion.div variants={staggerItem}>
-                        <label className="text-slate-300 text-sm font-medium block mb-2"><MdPeople className="inline mr-1 text-primary-400" /> Number of Guests</label>
-                        <input type="number" name="guests" min={1} max={pkg.max_guests} value={form.guests} onChange={handleChange}
-                            className="input-field" />
-                        <p className="text-slate-500 text-xs mt-1">Max {pkg.max_guests} guests allowed</p>
+                        <label className="text-slate-300 text-sm font-medium block mb-3"><MdCalendarToday className="inline mr-1 text-primary-400" /> Select Travel Date</label>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                            {(pkg.availability || []).map((slot, idx) => (
+                                <button
+                                    key={idx}
+                                    type="button"
+                                    onClick={() => setForm({ ...form, travel_date: slot.available_date, travel_date_obj: slot })}
+                                    className={`p-3 rounded-2xl border text-left transition-all ${form.travel_date === slot.available_date
+                                            ? 'bg-primary-500 border-primary-400 text-white shadow-lg shadow-primary-500/20'
+                                            : 'bg-white/5 border-white/5 text-slate-400 hover:border-white/10'
+                                        }`}
+                                >
+                                    <p className="text-xs font-bold uppercase tracking-wider mb-1">{new Date(slot.available_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                                    <p className={`text-[10px] font-bold ${form.travel_date === slot.available_date ? 'text-primary-100' : 'text-emerald-500'}`}>
+                                        {slot.available_slots} slots left
+                                    </p>
+                                </button>
+                            ))}
+                            {(!pkg.availability || pkg.availability.length === 0) && (
+                                <p className="col-span-full py-4 text-center text-slate-500 text-sm italic border border-dashed border-white/10 rounded-2xl">
+                                    No available dates found for this package.
+                                </p>
+                            )}
+                        </div>
                     </motion.div>
 
                     <motion.div variants={staggerItem}>
-                        <label className="text-slate-300 text-sm font-medium block mb-2"><MdCalendarToday className="inline mr-1 text-primary-400" /> Travel Date</label>
-                        <input type="date" name="travel_date" value={form.travel_date} onChange={handleChange} required
-                            min={new Date().toISOString().split('T')[0]}
-                            className="input-field" />
+                        <label className="text-slate-300 text-sm font-medium block mb-2"><MdPeople className="inline mr-1 text-primary-400" /> Number of Guests</label>
+                        <input
+                            type="number"
+                            name="guests"
+                            min={1}
+                            max={Math.min(pkg.max_booking_limit || 5, form.travel_date_obj?.available_slots || 99)}
+                            value={form.guests}
+                            onChange={handleChange}
+                            className="input-field"
+                        />
+                        <p className="text-slate-500 text-xs mt-1">
+                            {pkg.is_group_package ? 'Group package: ' : ''}
+                            Max {Math.min(pkg.max_booking_limit || 5, form.travel_date_obj?.available_slots || pkg.max_booking_limit || 5)} guests per booking
+                        </p>
                     </motion.div>
 
                     <motion.div variants={staggerItem}>

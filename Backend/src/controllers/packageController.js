@@ -34,24 +34,13 @@ async function create(req, res, next) {
     try {
         const { images, ...pkgData } = req.body;
 
-        // Map frontend fields to DB fields
-        const mappedData = {
-            destination_id: pkgData.destination_id || 1, // Default or find first
-            title: pkgData.title,
-            description: pkgData.description || null,
-            duration_days: pkgData.duration_days || pkgData.duration,
-            price_per_person: pkgData.price_per_person || pkgData.price,
-            is_available: pkgData.is_available ?? 1,
-            image_url: null
-        };
-
-        // Ensure image_url is set to the main image or the first one
+        // Extract main image_url for the package record
         if (images && images.length > 0) {
             const mainImg = images.find(img => img.is_main) || images[0];
-            mappedData.image_url = mainImg.url;
+            pkgData.image_url = mainImg.url || mainImg.image_url;
         }
 
-        const id = await packageModel.create(mappedData);
+        const id = await packageModel.create(pkgData);
 
         // Update gallery
         if (images) {
@@ -60,7 +49,7 @@ async function create(req, res, next) {
 
         const pkg = await packageModel.getById(id);
         const gallery = await galleryModel.getGallery('package', id);
-        pkg.images = gallery;
+        if (pkg) pkg.images = gallery;
 
         return res.status(201).json({ success: true, message: 'Package created.', data: pkg });
     } catch (err) { next(err); }
@@ -71,24 +60,13 @@ async function update(req, res, next) {
         const id = Number(req.params.id);
         const { images, ...pkgData } = req.body;
 
-        // Map frontend fields to DB fields
-        const mappedData = {
-            destination_id: pkgData.destination_id,
-            title: pkgData.title,
-            description: pkgData.description,
-            duration_days: pkgData.duration_days || pkgData.duration,
-            price_per_person: pkgData.price_per_person || pkgData.price,
-            is_available: pkgData.is_available,
-            image_url: null
-        };
-
-        // Ensure image_url is set to the main image or the first one
+        // Extract main image_url for the package record
         if (images && images.length > 0) {
             const mainImg = images.find(img => img.is_main) || images[0];
-            mappedData.image_url = mainImg.url;
+            pkgData.image_url = mainImg.url || mainImg.image_url;
         }
 
-        const affected = await packageModel.update(id, mappedData);
+        const affected = await packageModel.update(id, pkgData);
         if (!affected) return res.status(404).json({ success: false, message: 'Package not found.' });
 
         // Update gallery
@@ -98,7 +76,7 @@ async function update(req, res, next) {
 
         const pkg = await packageModel.getById(id);
         const gallery = await galleryModel.getGallery('package', id);
-        pkg.images = gallery;
+        if (pkg) pkg.images = gallery;
 
         return res.json({ success: true, message: 'Package updated.', data: pkg });
     } catch (err) { next(err); }

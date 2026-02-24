@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { MdFlightTakeoff, MdSchedule, MdPeople, MdArrowBack, MdAttachMoney } from 'react-icons/md';
+import { MdFlightTakeoff, MdSchedule, MdPeople, MdArrowBack, MdAttachMoney, MdHotel, MdMap, MdLabel } from 'react-icons/md';
 import { packageAPI } from '../../services/api';
 import { slideUp } from '../../animations/variants';
 import SkeletonLoader from '../../components/ui/SkeletonLoader';
+import MediaGallery from '../../components/ui/MediaGallery';
 import { useAuth } from '../../context/AuthContext';
 
 export default function PackageDetail() {
@@ -53,15 +54,78 @@ export default function PackageDetail() {
             <div className="max-w-5xl mx-auto px-4 sm:px-6 mt-10">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-2 space-y-6">
+                        {/* Badges */}
+                        <div className="flex flex-wrap gap-2 mb-4">
+                            {(pkg.package_types || []).map(type => (
+                                <span key={type} className="px-3 py-1 bg-primary-500/10 border border-primary-500/20 text-primary-400 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                                    {type}
+                                </span>
+                            ))}
+                        </div>
+
                         {/* Info */}
                         <div className="card p-6">
                             <div className="flex flex-wrap gap-6 mb-6">
                                 <div className="flex items-center gap-2 text-slate-300"><MdSchedule className="text-primary-400 text-xl" /><span className="font-semibold">{pkg.duration_days} days</span></div>
-                                <div className="flex items-center gap-2 text-slate-300"><MdPeople className="text-primary-400 text-xl" />Max {pkg.max_guests} guests</div>
+                                <div className="flex items-center gap-2 text-slate-300"><MdPeople className="text-primary-400 text-xl" />Capacity: {pkg.max_guests}</div>
                                 <div className="flex items-center gap-2"><MdAttachMoney className="text-accent-400 text-xl" /><span className="text-accent-400 font-bold text-lg">${Number(pkg.price_per_person).toLocaleString()}</span><span className="text-slate-400 text-sm">/person</span></div>
                             </div>
-                            {pkg.description && <p className="text-slate-400 leading-relaxed">{pkg.description}</p>}
+                            {pkg.description && <p className="text-slate-400 leading-relaxed mb-6">{pkg.description}</p>}
+
+                            {/* Journey Flow */}
+                            {pkg.destinations && pkg.destinations.length > 0 && (
+                                <div className="mt-8 border-t border-white/5 pt-6">
+                                    <h3 className="text-white font-semibold flex items-center gap-2 mb-4">
+                                        <MdMap className="text-primary-400" /> Your Journey
+                                    </h3>
+                                    <div className="flex flex-wrap items-center gap-3">
+                                        {pkg.destinations.map((dest, idx) => (
+                                            <div key={idx} className="flex items-center gap-3">
+                                                <div className="bg-white/5 px-4 py-2 rounded-xl border border-white/10 text-center">
+                                                    <p className="text-white font-medium text-sm">{dest.destination_name}</p>
+                                                    <p className="text-[10px] text-slate-500 font-bold uppercase">{dest.days_spent} Days</p>
+                                                </div>
+                                                {idx < pkg.destinations.length - 1 && <div className="w-4 h-[2px] bg-white/10" />}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
+
+                        {/* Inclusions (Hotels) */}
+                        {pkg.hotels && pkg.hotels.length > 0 && (
+                            <div className="card p-6">
+                                <h3 className="text-white font-semibold flex items-center gap-2 mb-4">
+                                    <MdHotel className="text-primary-400" /> Stay Included
+                                </h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {pkg.hotels.map((hotel, idx) => (
+                                        <div key={idx} className="bg-white/5 p-4 rounded-2xl border border-white/5 flex gap-4">
+                                            <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center text-slate-500">
+                                                <MdHotel size={24} />
+                                            </div>
+                                            <div>
+                                                <p className="text-white font-medium text-sm">{hotel.hotel_name}</p>
+                                                <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">{hotel.city}</p>
+                                                <div className="flex gap-0.5 mt-1">
+                                                    {[...Array(Math.floor(hotel.stars || 5))].map((_, i) => (
+                                                        <span key={i} className="text-orange-400 text-[10px]">★</span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Gallery Integration */}
+                        {pkg.images && pkg.images.length > 0 && (
+                            <div className="card p-6">
+                                <MediaGallery images={pkg.images} />
+                            </div>
+                        )}
 
                         {/* Itinerary */}
                         {itinerary && Array.isArray(itinerary) && (

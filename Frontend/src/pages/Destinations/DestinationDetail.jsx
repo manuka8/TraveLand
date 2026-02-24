@@ -6,6 +6,7 @@ import { destinationAPI, reviewAPI, packageAPI } from '../../services/api';
 import PackageCard from '../../components/ui/PackageCard';
 import StarRating from '../../components/ui/StarRating';
 import SkeletonLoader from '../../components/ui/SkeletonLoader';
+import MediaGallery from '../../components/ui/MediaGallery';
 import { slideUp, staggerContainer, staggerItem } from '../../animations/variants';
 
 export default function DestinationDetail() {
@@ -67,6 +68,13 @@ export default function DestinationDetail() {
                             <div className="card p-6 mb-8">
                                 <h2 className="font-display font-semibold text-xl text-white mb-4">About {dest.name}</h2>
                                 <p className="text-slate-400 leading-relaxed">{dest.description}</p>
+                            </div>
+                        )}
+
+                        {/* Gallery Integration */}
+                        {dest.images && dest.images.length > 0 && (
+                            <div className="card p-6 mb-8">
+                                <MediaGallery images={dest.images} />
                             </div>
                         )}
 

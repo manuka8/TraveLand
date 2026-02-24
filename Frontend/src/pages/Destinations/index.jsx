@@ -7,7 +7,7 @@ import DestinationCard from '../../components/ui/DestinationCard';
 import { CardSkeleton } from '../../components/ui/SkeletonLoader';
 import { staggerContainer, staggerItem, slideUp } from '../../animations/variants';
 
-const CATEGORIES = ['', 'beach', 'mountain', 'city', 'nature', 'adventure', 'cultural'];
+const CATEGORIES = ['', 'beach', 'mountain', 'city', 'nature', 'adventure', 'cultural','religious','historical'];
 
 export default function Destinations() {
     const [searchParams, setSearchParams] = useSearchParams();

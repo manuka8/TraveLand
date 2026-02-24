@@ -239,6 +239,8 @@ export default function AdminDestinations() {
                 <option value="Beach">Beach</option>
                 <option value="City">City</option>
                 <option value="Adventure">Adventure</option>
+                <option value="Religious">Religious</option>
+                <option value="Historical">Historical</option>
               </select>
             </div>
           </div>

@@ -22,7 +22,7 @@ async function loadSqlFile(filename) {
         .filter((s) => s.length > 0);
 
     for (const statement of statements) {
-        await pool.execute(statement);
+        await pool.query(statement);
     }
 
     console.log(`  ✔ ${filename} loaded`);
@@ -41,6 +41,7 @@ async function initDatabase() {
         'reviews.sql',
         'hotels.sql',
         'gallery.sql',
+        'package_overhaul.sql',
     ];
 
     for (const file of sqlFiles) {

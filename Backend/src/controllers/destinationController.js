@@ -52,7 +52,7 @@ async function create(req, res, next) {
         // Ensure image_url is set to the main image or the first one
         if (images && images.length > 0) {
             const mainImg = images.find(img => img.is_main) || images[0];
-            mappedData.image_url = mainImg.url;
+            mappedData.image_url = mainImg.url || mainImg.image_url;
         }
 
         const id = await destinationModel.create(mappedData);
@@ -89,7 +89,7 @@ async function update(req, res, next) {
         // Ensure image_url is set to the main image or the first one
         if (images && images.length > 0) {
             const mainImg = images.find(img => img.is_main) || images[0];
-            mappedData.image_url = mainImg.url;
+            mappedData.image_url = mainImg.url || mainImg.image_url;
         }
 
         const affected = await destinationModel.update(id, mappedData);

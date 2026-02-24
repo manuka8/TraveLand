@@ -30,7 +30,7 @@ async function updateGallery(entityType, entityId, images) {
             for (const img of images) {
                 await connection.execute(
                     `INSERT INTO gallery (entity_type, entity_id, image_url, is_main) VALUES (?, ?, ?, ?)`,
-                    [entityType, entityId, img.url, img.is_main ? 1 : 0]
+                    [entityType, entityId, img.url || img.image_url, img.is_main ? 1 : 0]
                 );
             }
         }
