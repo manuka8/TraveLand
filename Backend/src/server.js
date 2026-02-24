@@ -6,7 +6,9 @@ const { testConnection } = require('./config/db');
 const { initDatabase } = require('./utils/dbInit');
 
 const PORT = process.env.PORT || 5000;
-
+console.log("MYSQLHOST:", process.env.MYSQLHOST);
+console.log("MYSQLPORT:", process.env.MYSQLPORT);
+console.log("MYSQLUSER:", process.env.MYSQLUSER);
 async function startServer() {
     try {
         // 1. Test DB connection
