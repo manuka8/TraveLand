@@ -22,7 +22,17 @@ async function loadSqlFile(filename) {
         .filter((s) => s.length > 0);
 
     for (const statement of statements) {
-        await pool.query(statement);
+        try {
+            await pool.query(statement);
+        } catch (err) {
+            // Ignore "Duplicate column name", "Duplicate key name", and "Duplicate entry"
+            // This makes the scripts idempotent and compatible across MySQL flavors.
+            const ignoredCodes = ['ER_DUP_FIELDNAME', 'ER_DUP_KEYNAME', 'ER_DUP_ENTRY', '1060', '1061', '1062'];
+            if (ignoredCodes.includes(err.code) || ignoredCodes.includes(String(err.errno))) {
+                continue;
+            }
+            throw err;
+        }
     }
 
     console.log(`  ✔ ${filename} loaded`);

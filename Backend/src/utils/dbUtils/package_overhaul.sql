@@ -48,9 +48,10 @@ CREATE TABLE IF NOT EXISTS package_hotels (
   INDEX idx_ph_package (package_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 5. Add travel_package_type and travel_limit columns to packages for quick constraints
-ALTER TABLE packages ADD COLUMN IF NOT EXISTS max_booking_limit INT DEFAULT 5;
-ALTER TABLE packages ADD COLUMN IF NOT EXISTS is_group_package TINYINT(1) DEFAULT 0;
+-- 5. Add travel_package_type and travel_limit columns to packages
+ALTER TABLE packages ADD COLUMN max_booking_limit INT DEFAULT 5;
+ALTER TABLE packages ADD COLUMN is_group_package TINYINT(1) DEFAULT 0;
+
 
 -- 6. Update bookings to link to availability slot instead of just a date (optional but recommended)
 -- For now, we will validate against package_availability table during booking creation.
