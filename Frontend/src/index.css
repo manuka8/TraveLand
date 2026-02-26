@@ -62,21 +62,21 @@
 
 @layer base {
   :root {
-    --bg-main: #f8fafc;
-    --text-main: #020617;
-    --text-muted: #475569;
+    --bg-main: #f1f5f9;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
     --card-bg: #ffffff;
-    --card-border: rgba(0, 0, 0, 0.04);
-    --input-bg: #f8fafc;
-    --scroll-track: #f1f5f9;
-    --badge-blue-bg: rgba(42, 157, 244, 0.1);
-    --badge-blue-text: #0d66c0;
-    --badge-orange-bg: rgba(249, 115, 22, 0.1);
-    --badge-orange-text: #ea6c0a;
-    --badge-green-bg: rgba(16, 185, 129, 0.1);
-    --badge-green-text: #059669;
-    --badge-red-bg: rgba(244, 63, 94, 0.1);
-    --badge-red-text: #e11d48;
+    --card-border: rgba(0, 0, 0, 0.06);
+    --input-bg: #ffffff;
+    --scroll-track: #e2e8f0;
+    --badge-blue-bg: rgba(42, 157, 244, 0.12);
+    --badge-blue-text: #0284c7;
+    --badge-orange-bg: rgba(249, 115, 22, 0.12);
+    --badge-orange-text: #c2410c;
+    --badge-green-bg: rgba(16, 185, 129, 0.12);
+    --badge-green-text: #047857;
+    --badge-red-bg: rgba(244, 63, 94, 0.12);
+    --badge-red-text: #be123c;
   }
 
   .dark {
@@ -150,7 +150,7 @@
 }
 
 @utility glass {
-  @apply bg-white/40 dark:bg-white/5 backdrop-blur-lg border border-white/20 dark:border-white/10;
+  @apply bg-white/60 dark:bg-white/5 backdrop-blur-xl border border-white/40 dark:border-white/10;
 }
 
 @utility section-title {
@@ -162,7 +162,7 @@
 }
 
 @utility input-field {
-  @apply w-full px-4 py-3 bg-[var(--input-bg)] border border-[var(--card-border)] rounded-xl text-[var(--text-main)] placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all duration-200;
+  @apply w-full px-4 py-3 bg-[var(--input-bg)] border border-[var(--card-border)] rounded-xl text-[var(--text-main)] placeholder-slate-400 dark:placeholder-slate-500 shadow-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all duration-200;
 }
 
 @utility badge {

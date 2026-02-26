@@ -52,29 +52,29 @@ export default function Home() {
                         <span className="badge-blue text-sm px-4 py-1.5">✈ Explore the World</span>
                     </motion.div>
                     <motion.h1 {...slideUp} transition={{ delay: 0.2 }}
-                        className="font-display text-5xl md:text-7xl font-bold text-white dark:text-white leading-tight mb-6">
+                        className="font-display text-4xl md:text-7xl font-bold text-white leading-tight mb-6 drop-shadow-lg">
                         Travel Beyond<br />
                         <span className="text-gradient">Your Imagination</span>
                     </motion.h1>
-                    <motion.p {...slideUp} transition={{ delay: 0.3 }} className="text-white/90 dark:text-white/80 text-lg md:text-xl max-w-2xl mx-auto mb-10 transition-colors duration-300">
+                    <motion.p {...slideUp} transition={{ delay: 0.3 }} className="text-white/90 text-base md:text-xl max-w-2xl mx-auto mb-10 transition-colors duration-300 drop-shadow-md">
                         Discover breathtaking destinations, curated travel packages, and unforgettable experiences tailored just for you.
                     </motion.p>
 
                     {/* Search Bar */}
                     <motion.div {...slideUp} transition={{ delay: 0.4 }} className="max-w-2xl mx-auto">
-                        <div className="glass rounded-2xl p-2 flex gap-2 shadow-2xl shadow-primary-500/5">
-                            <div className="flex-1 flex items-center gap-3 px-4">
-                                <MdSearch className="text-[var(--text-muted)] text-xl shrink-0" />
+                        <div className="glass rounded-2xl p-2 flex flex-col sm:flex-row gap-2 shadow-2xl shadow-primary-500/5 transition-all">
+                            <div className="flex-1 flex items-center gap-3 px-4 py-2 sm:py-0">
+                                <MdSearch className="text-[var(--text-main)] sm:text-[var(--text-muted)] text-xl shrink-0" />
                                 <input
                                     type="text"
-                                    placeholder="Search destinations, countries..."
+                                    placeholder="Search destinations..."
                                     value={search}
                                     onChange={e => setSearch(e.target.value)}
                                     onKeyDown={e => e.key === 'Enter' && window.location.assign(`/destinations?search=${search}`)}
-                                    className="bg-transparent flex-1 text-[var(--text-main)] placeholder-slate-400 dark:placeholder-slate-500 outline-none py-2"
+                                    className="bg-transparent flex-1 text-[var(--text-main)] placeholder-slate-400 dark:placeholder-slate-500 outline-none py-2 text-sm md:text-base"
                                 />
                             </div>
-                            <Link to={`/destinations${search ? `?search=${search}` : ''}`} className="btn-primary rounded-xl shrink-0">
+                            <Link to={`/destinations${search ? `?search=${search}` : ''}`} className="btn-primary rounded-xl shrink-0 py-3 sm:py-2 px-6 text-sm font-bold">
                                 Explore Now
                             </Link>
                         </div>
@@ -161,11 +161,11 @@ export default function Home() {
                     <motion.div {...slideUp} viewport={{ once: true }} whileInView="animate" initial="initial">
                         <h2 className="section-title mb-4">Ready to Start Your <span className="text-gradient">Adventure?</span></h2>
                         <p className="section-subtitle mx-auto mb-8">Join over 50,000 travelers who have explored the world with TravelLand.</p>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Link to="/register" className="btn-primary px-8 py-4 text-base">
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                            <Link to="/register" className="btn-primary w-full sm:w-auto px-8 py-4 text-base">
                                 <MdFlightTakeoff /> Get Started Free
                             </Link>
-                            <Link to="/destinations" className="btn-outline px-8 py-4 text-base">
+                            <Link to="/destinations" className="btn-outline w-full sm:w-auto px-8 py-4 text-base">
                                 Browse Destinations
                             </Link>
                         </div>

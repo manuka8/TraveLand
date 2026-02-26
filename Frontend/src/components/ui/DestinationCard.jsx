@@ -45,10 +45,10 @@ export default function DestinationCard({ destination }) {
                         </motion.span>
                     )}
 
-                    {/* Tags (visible on hover) */}
-                    <div className="absolute bottom-3 left-3 flex gap-1 flex-wrap translate-y-8 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    {/* Tags */}
+                    <div className="absolute bottom-3 left-3 flex gap-1 flex-wrap md:translate-y-8 md:group-hover:translate-y-0 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300">
                         {(tags || ['Nature', 'Culture']).map(tag => (
-                            <span key={tag} className="text-[10px] bg-white/20 backdrop-blur-md text-white px-2 py-0.5 rounded-md border border-white/10">
+                            <span key={tag} className="text-[10px] bg-black/40 dark:bg-white/20 backdrop-blur-md text-white px-2 py-0.5 rounded-md border border-white/10 shadow-sm">
                                 {tag}
                             </span>
                         ))}
@@ -80,7 +80,7 @@ export default function DestinationCard({ destination }) {
                             </span>
                         </div>
 
-                        <div className="text-primary-500 opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-300 flex items-center gap-1 text-xs font-bold uppercase tracking-tighter">
+                        <div className="text-primary-600 dark:text-primary-400 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:translate-x-4 md:group-hover:translate-x-0 transition-all duration-300 flex items-center gap-1 text-[10px] md:text-xs font-bold uppercase tracking-tighter">
                             View Details <span>→</span>
                         </div>
                     </div>
@@ -93,7 +93,7 @@ export default function DestinationCard({ destination }) {
                     e.preventDefault();
                     setIsWishlisted(!isWishlisted);
                 }}
-                className="absolute top-3 right-3 w-9 h-9 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-red-500 transition-all duration-300 z-10"
+                className="absolute top-3 right-3 w-9 h-9 bg-black/20 md:bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-red-500 transition-all duration-300 z-10"
             >
                 <motion.div
                     whileTap={{ scale: 1.5 }}

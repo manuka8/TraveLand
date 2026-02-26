@@ -32,11 +32,11 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16 lg:h-20">
                     {/* Logo */}
-                    <Link to="/" className="flex items-center gap-2 group">
-                        <div className="w-9 h-9 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                            <MdFlightTakeoff className="text-white text-lg" />
+                    <Link to="/" className="flex items-center gap-2 group shrink-0">
+                        <div className="w-8 h-8 md:w-9 md:h-9 bg-gradient-to-br from-primary-500 to-accent-500 rounded-lg md:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <MdFlightTakeoff className="text-white text-base md:text-lg" />
                         </div>
-                        <span className="font-display font-bold text-xl text-[var(--text-main)]">Travel<span className="text-gradient">Land</span></span>
+                        <span className="font-display font-bold text-lg md:text-xl text-[var(--text-main)]">Travel<span className="text-gradient">Land</span></span>
                     </Link>
 
                     {/* Desktop Nav */}
@@ -97,10 +97,10 @@ export default function Navbar() {
                     </div>
 
                     {/* Mobile menu button */}
-                    <div className="flex items-center gap-2 md:hidden">
+                    <div className="flex items-center gap-1 md:hidden">
                         <ThemeToggle />
-                        <button className="p-2 text-[var(--text-muted)] hover:text-[var(--text-main)]" onClick={() => setMenuOpen(!menuOpen)}>
-                            {menuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
+                        <button className="p-2.5 text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">
+                            {menuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
                         </button>
                     </div>
                 </div>
@@ -126,9 +126,9 @@ export default function Navbar() {
                                     <button onClick={() => { handleLogout(); setMenuOpen(false); }} className="px-4 py-3 text-red-500 text-left rounded-xl">Sign Out</button>
                                 </>
                             ) : (
-                                <div className="grid grid-cols-2 gap-3 mt-2">
-                                    <Link to="/login" onClick={() => setMenuOpen(false)} className="btn-ghost !bg-slate-100 dark:!bg-white/5 !text-sm">Sign In</Link>
-                                    <Link to="/register" onClick={() => setMenuOpen(false)} className="btn-primary !text-sm">Get Started</Link>
+                                <div className="grid grid-cols-2 gap-3 mt-4">
+                                    <Link to="/login" onClick={() => setMenuOpen(false)} className="btn-ghost !bg-slate-100 dark:!bg-white/5 !text-sm py-3 font-bold">Sign In</Link>
+                                    <Link to="/register" onClick={() => setMenuOpen(false)} className="btn-primary !text-sm py-3 font-bold">Get Started</Link>
                                 </div>
                             )}
                         </div>

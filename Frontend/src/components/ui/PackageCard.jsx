@@ -43,21 +43,18 @@ export default function PackageCard({ pkg }) {
 
                     <div className="absolute bottom-3 left-3 right-3 flex justify-between items-end">
                         <div>
-                            <p className="text-white/60 text-[10px] uppercase font-bold tracking-widest leading-none mb-1">Destination</p>
-                            <h4 className="text-white font-bold text-sm">{destination_name}</h4>
+                            <p className="text-white/70 text-[10px] uppercase font-bold tracking-widest leading-none mb-1">Destination</p>
+                            <h4 className="text-white font-bold text-sm md:text-base">{destination_name}</h4>
                         </div>
-                        <div className="flex gap-1.5">
+                        <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
                             {inclusions.map((item, i) => (
-                                <motion.div
+                                <div
                                     key={i}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.1 * i }}
-                                    className="w-7 h-7 bg-white/20 backdrop-blur-md rounded-lg flex items-center justify-center text-white border border-white/10"
+                                    className="w-7 h-7 shrink-0 bg-black/30 dark:bg-white/20 backdrop-blur-md rounded-lg flex items-center justify-center text-white border border-white/10"
                                     title={item.label}
                                 >
                                     <item.icon size={14} />
-                                </motion.div>
+                                </div>
                             ))}
                         </div>
                     </div>
@@ -99,11 +96,9 @@ export default function PackageCard({ pkg }) {
                     </div>
 
                     <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        whileHover={{ height: 'auto', opacity: 1 }}
-                        className="overflow-hidden mt-4"
+                        className="mt-4 md:h-0 md:opacity-0 md:group-hover:h-auto md:group-hover:opacity-100 overflow-hidden transition-all duration-300"
                     >
-                        <button className="btn-primary w-full py-2.5 rounded-xl text-sm font-bold shadow-none">
+                        <button className="btn-primary w-full py-3 rounded-xl text-sm font-bold shadow-md">
                             Book Adventure
                         </button>
                     </motion.div>

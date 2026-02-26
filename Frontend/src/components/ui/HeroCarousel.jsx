@@ -54,8 +54,8 @@ export default function HeroCarousel() {
                         className="w-full h-full object-cover"
                     />
                     {/* Overlays */}
-                    <div className="absolute inset-0 bg-black/40" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-main)] via-black/20 to-transparent dark:from-[#070c17]" />
+                    <div className="absolute inset-0 bg-black/50" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-main)] via-black/30 to-transparent dark:from-[#070c17] opacity-80" />
 
                     {/* Location Badge (Subtle) */}
                     <motion.div
