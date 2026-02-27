@@ -5,6 +5,12 @@
  */
 
 // ── Destinations ──────────────────────────────────────────────────────────────
+
+import ellatour from   '../assets/ella-tour.png';
+import sigiriyatour from   '../assets/sigiriya-tour.png';
+import waligamatour from   '../assets/waligama-tour.png';
+import yalatour from   '../assets/yala-tour.png';
+
 export const dummyDestinations = [
     {
         id: 1,
@@ -119,7 +125,7 @@ export const dummyPackages = [
         destination_name: 'Sigiriya Rock Fortress',
         country: 'Sri Lanka',
         description: 'Immerse yourself in the rich history and culture of Sri Lanka. From the ancient rock fortress of Sigiriya to the spiritual Temple of the Tooth in Kandy, this package offers a deep dive into the islands majestic past.',
-        image_url: 'https://images.unsplash.com/photo-1588416936097-41850ab3d86d?w=800&q=80',
+        image_url: sigiriyatour,
         price_per_person: 1299,
         duration_days: 12,
         max_guests: 15,
@@ -154,7 +160,7 @@ export const dummyPackages = [
         destination_name: 'Ella Village',
         country: 'Sri Lanka',
         description: 'Escape to the misty mountains of Ella. Trek through tea plantations, cross the iconic Nine Arches Bridge, and enjoy the worlds most scenic train ride.',
-        image_url: 'https://images.unsplash.com/photo-1580674684081-7617fbf3d745?w=800&q=80',
+        image_url: ellatour,
         price_per_person: 699,
         duration_days: 5,
         max_guests: 10,
@@ -185,7 +191,7 @@ export const dummyPackages = [
         destination_name: 'Mirissa Beach',
         country: 'Sri Lanka',
         description: 'Relax on the golden beaches of Mirissa and set sail to witness the majestic migration of Blue Whales in the Indian Ocean.',
-        image_url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80',
+        image_url: waligamatour,
         price_per_person: 549,
         duration_days: 4,
         max_guests: 12,
@@ -215,7 +221,7 @@ export const dummyPackages = [
         destination_name: 'Yala National Park',
         country: 'Sri Lanka',
         description: 'Venture deep into Yala National Park for a once-in-a-lifetime wildlife experience. Spot leopards, elephants and more on multiple custom game drives.',
-        image_url: 'https://images.unsplash.com/photo-1585508890641-ef1dc7f5cb4c?w=800&q=80',
+        image_url: yalatour,
         price_per_person: 899,
         duration_days: 4,
         max_guests: 6,
